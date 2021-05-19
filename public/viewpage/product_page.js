@@ -120,15 +120,25 @@ async function addNewProduct(form){
     }
 }
 
-//displays each product in each 
+//displays each product in each row
 function buildProductCard(product){
     return `
     <div class="card" style="width: 18rem; display: inline-block">
         <img src="${product.imageURL}" class="card-img-top">
         <div class="card-body">
-        <h5 class="card-title">${product.name}</h5>
-        <p class="card-text">$ ${product.price}<br>${product.summary}</p>
+            <h5 class="card-title">${product.name}</h5>
+            <p class="card-text">$ ${product.price}<br>${product.summary}</p>
         </div>
+        <form class="form-edit-product float-start" method="post">
+            <input type="hidden" name="docId" value="${product.docId}">
+            <button class="btn btn-outline-primary" type="submit">Edit</button>
+        </form>
+        <form class="form-delete-product float-end" method="post">
+            <input type="hidden" name="docId" value="${product.docId}">
+            <input type="hidden" name="imageName" value="${product.imageName}">
+            <button class="btn btn-outline-danger" type="submit">Delete</button>
+        </form>
+
     </div>
     `;
 }
