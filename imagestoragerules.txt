@@ -1,0 +1,9 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /product_images/{image}{
+    allow read, create, update, delete: if request.auth != null &&
+    	request.auth.token.email in ['admin@test.com', 'super@test.com'];
+    }
+  }
+}
