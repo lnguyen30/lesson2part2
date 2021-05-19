@@ -4,6 +4,7 @@ import * as FirebaseController from '../controller/firebase_controller.js'
 import * as Constant from '../model/constant.js'
 import * as Util from './util.js'
 import * as Route from '../controller/route.js'
+import * as Edit from '../controller/edit_product.js'
 
 let imageFile2Upload
 
@@ -84,6 +85,20 @@ export async function product_page(){
         //triggers the add product modal to page
         Element.modalAddProduct.show();
     })
+
+    //disables button once edit has been submitted, then calls edit_product function
+    const editForms = document.getElementsByClassName('form-edit-product')
+    for(let i = 0; i < editForms.length; i++){
+        editForms[i].addEventListener('submit', async e=>{
+            e.preventDefault();
+            const button = e.target.getElementsByTagName('button')[0];
+            const label = Util.disableButton(button)
+            //form's docId is passed to edit_product function from card
+            await Edit.edit_product(e.target.docId.value)
+            //enables button again
+            Util.enableButton(button, label)
+        })
+    }
 }
 
 //addes image and product info to firebase
