@@ -43,3 +43,16 @@ export async function getProductList(){
     return products;
 }
 
+//calls cloud function to retrieve product by id
+const cf_getProductById = firebase.functions().httpsCallable('cf_getProductById')
+export async function getProductById(docId){
+    const result = await cf_getProductById(docId);
+    //if data exists, create product object
+    if(result.data){
+        const product = new Product(result.data);
+        product.docId = result.data.docId;
+        return product;
+    }else{
+        return null;
+    }
+}
