@@ -25,7 +25,7 @@ export class Product{
             errors.name = 'Product name too short; min 3 chars';
         if(!this.price || !Number(this.price))
             errors.price = 'Price is not a number';
-        if(!this.summary || this.summary < 5)
+        if(!this.summary || this.summary.length < 5)
             errors.summary = 'Product summary too short; min 5 chars';
         if(!imageFile)
             errors.image = 'Image not selected';

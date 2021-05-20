@@ -39,7 +39,18 @@ export function addEventListeners(){
             summary: e.target.summary.value,
         });
         p.docId = e.target.docId.value;
-    })
+        const errors = p.validate(true); //bypass image check
+        
+        Element.formEditProduct.errorName.innerHTML = errors.name ? errors.name : '';
+        Element.formEditProduct.errorPrice.innerHTML = errors.price ? errors.price : '';
+        Element.formEditProduct.errorSummary.innerHTML = errors.summary ? errors.summary : '';
+
+        if(Object.keys(errors).length !=0){
+            Util.enableButton(button, label);
+            return;
+        }
+
+    });
 
     
 }
