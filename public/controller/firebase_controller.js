@@ -56,3 +56,13 @@ export async function getProductById(docId){
         return null;
     }
 }
+
+//calls updateProduct to update the product
+const cf_updateProduct = firebase.functions().httpsCallable('cf_updateProduct');
+export async function updateProduct(product){
+    const docId = product.docId;
+    //passes in updated values
+    const data = product.serializeForUpdate();
+    //cloud function
+    await cf_updateProduct({docId, data});
+}

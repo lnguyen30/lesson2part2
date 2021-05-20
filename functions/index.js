@@ -17,10 +17,31 @@ const Constant = require('./constant.js')
 exports.cf_addProduct = functions.https.onCall(addProduct);
 exports.cf_getProductList = functions.https.onCall(getProductList);
 exports.cf_getProductById = functions.https.onCall(getProductById);
+exports.cf_updateProduct = functions.https.onCall(updateProduct);
 
 //returns true or false if the email passed in is an admin account
 function isAdmin(email){
     return Constant.adminEmails.includes(email);
+}
+
+async function updateProduct(productInfo, context){
+    //productInfo = {docId, data}
+    //displays error message if function is invoked by non-admin
+     if(!isAdmin(context.auth.token.email)){
+        if(Constant.DEV) console.log('not admin', context.auth.token.email);
+        throw new functions.https.HttpsError('unauthenticated', 'Only admins may invoke this function');
+     }
+
+     try{
+         //firebase will update the product by the docId with productInfo data
+        await admin.firestore().collection(Constant.collectionNames.PRODUCT)
+                    .doc(productInfo.docId).update(productInfo.data)
+     }catch(e){
+        if(Constant.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', 'updateProduct Failed');
+     }
+
+
 }
 
 //retrieves product by id from firestore, data is product.id

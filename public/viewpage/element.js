@@ -3,7 +3,7 @@ export const modalInfobox = new bootstrap.Modal(document.getElementById('modal-i
 export const modalInfoboxTitleElement = document.getElementById('modal-info-title')
 export const modalInfoboxBodyElement = document.getElementById('modal-info-body')
 
-export const modalSignin = new bootstrap.Modal(document.getElementById('modal-signin'))
+export const modalSignin = new bootstrap.Modal(document.getElementById('modal-signin'), {backdrop: 'static'})
 export const modalAddProduct = new bootstrap.Modal(document.getElementById('modal-add-product'), {backdrop: 'static'})
 export const modalEditProduct = new bootstrap.Modal(document.getElementById('modal-edit-product'), {backdrop: 'static'})
 

@@ -26,7 +26,7 @@ export function addEventListeners(){
     })
 
     //event listener to read in new values from edit form
-    Element.formEditProduct.form.addEventListener('submit', e=>{
+    Element.formEditProduct.form.addEventListener('submit', async e=>{
         e.preventDefault();
         //disables button after clicked
         const button = e.target.getElementsByTagName('button')[0]
@@ -49,6 +49,24 @@ export function addEventListeners(){
             Util.enableButton(button, label);
             return;
         }
+
+        try{
+            //replaces image
+            if(imageFile2Upload){
+                //passes the new image from edit product form to firebase controller function
+                const imageInfo =  await FirebaseController.uploadImage(imageFile2Upload, e.target.imageName.value)
+                p.imageURL = imageInfo.imageURL;
+            }
+
+            //update firestore
+            await FirebaseController.updateProduct(p);
+            //update web browser
+        }catch(e){
+            if (Constant.DEV) console.log(e);
+            Util.info('Update product error', JSON.stringify(e), Element.modalEditProduct);
+        }
+
+        Util.enableButton(button, label)
 
     });
 
