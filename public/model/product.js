@@ -1,9 +1,9 @@
 export class Product{
     constructor(data){
-        this.name = data.name.toLowerCase();
+        this.name = data.name.toLowerCase().trim();
         //checks if price is numeric or not; else converts it to number type
         this.price = typeof data.price == 'number' ? data.price : Number(data.price);
-        this.summary = data.summary;
+        this.summary = data.summary.trim();
         this.imageName = data.imageName;
         this.imageURL = data.imageURL;
     }

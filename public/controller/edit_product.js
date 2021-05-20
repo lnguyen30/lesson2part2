@@ -2,10 +2,12 @@ import * as FirebaseController from './firebase_controller.js'
 import * as Util from '../viewpage/util.js'
 import * as Constant from '../model/constant.js'
 import * as Element from '../viewpage/element.js'
+import { Product } from '../model/product.js'
 
 let imageFile2Upload
 
 export function addEventListeners(){
+    //even listener to change image
     Element.formEditProduct.imageButton.addEventListener('change', e=>{
         imageFile2Upload = e.target.files[0]; //grabs the image of the form
         if(!imageFile2Upload){
@@ -22,6 +24,24 @@ export function addEventListeners(){
              reader.onload = () => Element.formEditProduct.imageTag.src = reader.result
              
     })
+
+    //event listener to read in new values from edit form
+    Element.formEditProduct.form.addEventListener('submit', e=>{
+        e.preventDefault();
+        //disables button after clicked
+        const button = e.target.getElementsByTagName('button')[0]
+        const label = Util.disableButton(button);
+
+        //over writes new product over older one
+        const p = new Product({
+            name: e.target.name.value,
+            price: e.target.price.value,
+            summary: e.target.summary.value,
+        });
+        p.docId = e.target.docId.value;
+    })
+
+    
 }
 
 export async function edit_product(docId){
