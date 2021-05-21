@@ -60,7 +60,18 @@ export function addEventListeners(){
 
             //update firestore
             await FirebaseController.updateProduct(p);
-            //update web browser
+            //update web browser, using the product's docId
+            const cardTag = document.getElementById('card-'+p.docId); 
+            if(imageFile2Upload){//if imagefile has been updated
+                //updates image
+                cardTag.getElementsByTagName('img')[0].src = p.imageURL;
+            }
+            //updates description and price
+            cardTag.getElementsByClassName('card-title')[0].innerHTML = p.name;
+            cardTag.getElementsByClassName('card-text')[0].innerHTML = `$ ${p.price}<br>${p.summary}`;
+
+            Util.info('Update', `${p.name} is updated succesfully`, Element.modalEditProduct);
+
         }catch(e){
             if (Constant.DEV) console.log(e);
             Util.info('Update product error', JSON.stringify(e), Element.modalEditProduct);
