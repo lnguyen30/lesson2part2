@@ -112,5 +112,22 @@ export async function edit_product(docId){
 
     Element.modalEditProduct.show();
 
+}
 
+//client side function to call firebase controller
+export async function delete_product(docId, imageName){
+    
+    try{
+        // calls firebase controller to delete product and image
+       await FirebaseController.deleteProduct(docId, imageName);
+       //updates page after removing product
+       const cardTag = document.getElementById('card-'+docId); 
+       cardTag.remove();
+
+       Util.info('Deleted', `${docId} has been deleted`);
+
+    }catch(e){
+        if (Constant.DEV) console.log(e);
+        Util.info('deleteProduct Error', JSON.stringify(e));
+    }
 }

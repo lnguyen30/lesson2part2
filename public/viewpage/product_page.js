@@ -9,7 +9,7 @@ import * as Edit from '../controller/edit_product.js'
 let imageFile2Upload
 
 export function addEventListeners(){
-    //event listener when Product button is clicked, function is called in app.js
+    //event listener when Product button in navbar is clicked, function is called from app.js
     Element.menuProducts.addEventListener('click', async ()=>{
         history.pushState(null, null, Route.routePathname.PRODUCTS)
         const button = Element.menuProducts;
@@ -87,7 +87,8 @@ export async function product_page(){
     })
 
     //disables button once edit has been submitted, then calls edit_product function
-    const editForms = document.getElementsByClassName('form-edit-product')
+    // gets the element by the class name
+    const editForms = document.getElementsByClassName('form-edit-product');
     for(let i = 0; i < editForms.length; i++){
         editForms[i].addEventListener('submit', async e=>{
             e.preventDefault();
@@ -99,6 +100,23 @@ export async function product_page(){
             Util.enableButton(button, label)
         })
     }
+
+    //disables button once delete has been pressed, then calls delete_product function
+    const deleteForms = document.getElementsByClassName('form-delete-product');
+    for(let i = 0; i < deleteForms.length; i++){
+        deleteForms[i].addEventListener('submit', async e =>{
+            e.preventDefault();
+            //confirmation to delete product
+            if(!window.confirm("Press OK to delete")) return;
+            //retrieves the element by tag name of the card form
+            const button = e.target.getElementsByTagName('button')[0];
+            const label = Util.disableButton(button);
+            //passes deleted product by the docId and imageName to firebase controller
+            await Edit.delete_product(e.target.docId.value, e.target.imageName.value);
+            Util.enableButton(button, label);
+        })
+    }
+
 }
 
 //addes image and product info to firebase

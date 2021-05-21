@@ -18,10 +18,29 @@ exports.cf_addProduct = functions.https.onCall(addProduct);
 exports.cf_getProductList = functions.https.onCall(getProductList);
 exports.cf_getProductById = functions.https.onCall(getProductById);
 exports.cf_updateProduct = functions.https.onCall(updateProduct);
+exports.cf_deleteProduct = functions.https.onCall(deleteProduct);
 
 //returns true or false if the email passed in is an admin account
 function isAdmin(email){
     return Constant.adminEmails.includes(email);
+}
+
+//delete's product with docId and imageName
+async function deleteProduct(docId, context){
+     //displays error message if function is invoked by non-admin
+     if(!isAdmin(context.auth.token.email)){
+        if(Constant.DEV) console.log('not admin', context.auth.token.email);
+        throw new functions.https.HttpsError('unauthenticated', 'Only admins may invoke this function');
+     }
+
+     try{
+        await admin.firestore().collection(Constant.collectionNames.PRODUCT)
+            .doc(docId).delete();
+     }catch(e){
+        if(Constant.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', 'deleteProduct Failed');
+     }
+
 }
 
 async function updateProduct(productInfo, context){

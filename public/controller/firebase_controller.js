@@ -66,3 +66,14 @@ export async function updateProduct(product){
     //cloud function
     await cf_updateProduct({docId, data});
 }
+
+//calls deleteProduct to delete product
+//delete the product first, then image; else, the ref to image will be lost if deleted first
+const cf_deleteProduct = firebase.functions().httpsCallable('cf_deleteProduct');
+export async function deleteProduct(docId, imageName){
+    await cf_deleteProduct(docId);
+    //passes the image name to firestore to delete
+    const ref = firebase.storage().ref()
+                .child(Constant.storageFolderNames.PRODUCT_IMAGES + imageName)
+    await ref.delete();
+}
