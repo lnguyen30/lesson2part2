@@ -96,6 +96,7 @@ export async function edit_product(docId){
     Element.formEditProduct.form.summary.value = product.summary;
     Element.formEditProduct.imageTag.src = product.imageURL;
     Element.formEditProduct.errorImage.innerHTML = ''
+    imageFile2Upload = null;
 
     Element.modalEditProduct.show();
 
