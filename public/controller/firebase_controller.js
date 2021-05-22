@@ -77,3 +77,10 @@ export async function deleteProduct(docId, imageName){
                 .child(Constant.storageFolderNames.PRODUCT_IMAGES + imageName)
     await ref.delete();
 }
+
+//calls getUserList to retrieve users
+const cf_getUserList = firebase.functions().httpsCallable('cf_getUserList')
+export async function getUserList(){
+    const result = await cf_getUserList();
+    return result.data;
+}

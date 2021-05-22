@@ -19,10 +19,43 @@ exports.cf_getProductList = functions.https.onCall(getProductList);
 exports.cf_getProductById = functions.https.onCall(getProductById);
 exports.cf_updateProduct = functions.https.onCall(updateProduct);
 exports.cf_deleteProduct = functions.https.onCall(deleteProduct);
+exports.cf_getUserList = functions.https.onCall(getUserList);
 
 //returns true or false if the email passed in is an admin account
 function isAdmin(email){
     return Constant.adminEmails.includes(email);
+}
+
+//get's list of users in firebase store
+async function getUserList(data, context){
+    if(!isAdmin(context.auth.token.email)){
+        if(Constant.DEV) console.log('not admin', context.auth.token.email);
+        throw new functions.https.HttpsError('unauthenticated', 'Only admins may invoke this function');
+     }
+     //array contains list of users
+     const userList = [];
+     //limit for the time being ratJAM
+     const MAXRESULTS = 2; 
+     
+     try{
+        //gets list of users
+       let result = await admin.auth().listUsers(MAXRESULTS);
+       //spread operator to store each value of users
+       userList.push(...result.users);
+       //if pageToken exists, then nextPageToken exists, else null
+       let nextPageToken = result.pageToken
+       //if nextpageToken exists, then read next batch of users
+       while(nextPageToken){
+           result = await admin.auth().listUsers(MAXRESULTS, nextPageToken);
+           userList.push(...result.users);
+           nextPageToken = result.pageToken;
+       }
+
+       return userList;
+     }catch(e){
+        if(Constant.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', 'getUserList Failed');
+     }
 }
 
 //delete's product with docId and imageName
