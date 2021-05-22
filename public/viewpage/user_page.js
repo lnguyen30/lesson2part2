@@ -49,7 +49,7 @@ export async function users_page(){
     // event lister when toggle button is pressed    
     const toggleForms = document.getElementsByClassName('form-toggle-user');
     for(let i = 0; i < toggleForms.length; i++){
-        toggleForms[i].addEventListener('submit', e =>{
+        toggleForms[i].addEventListener('submit', async e =>{
             e.preventDefault();
             // assigns the toggle button to button variable
             const button = e.target.getElementsByTagName('button')[0];
@@ -59,16 +59,36 @@ export async function users_page(){
             //fetches the uid from forms-toggle-users
             const uid = e.target.uid.value;
             const disabled = e.target.disabled.value;
+
+            //update object, if the string value is true ->toggle to false else if it's false ->true
+            const update = {
+                disabled: disabled === 'true'? false : true, 
+            }
+
+            try{
+                //passes user uid and toggle state to updateUser
+                await FirebaseController.updateUser(uid, update);
+                //updates user's state value
+                e.target.disabled.value = `${update.disabled}`;
+                //switches the tag element to Active or Disabled
+                document.getElementById(`user-status-${uid}`).innerHTML = `${update.disabled ? 'Disabled' : 'Active'}`
+                Util.info('Status toggled', `Disabled: ${update.disabled}`);
+            }catch(e){
+                if(Constant.DEV) console.log(e);
+                Util.info('Toggle user status in error', JSON.stringify(e))
+            }
+
+            Util.enableButton(button, label);
         })
     }
  }
 
-//renders each row of user
+//renders each row of user, user-status-user.uid will id which user to toggle off/on
  function builderUserRow(user){
      return `
         <tr>
             <td>${user.email}</td>
-            <td>${user.disabled ? 'Disabled' : 'Active'}</td>
+            <td id="user-status-${user.uid}">${user.disabled ? 'Disabled' : 'Active'}</td>
             <td>
                 <form class="form-toggle-user" method="post" style="display: inline-block;">
                    <input type="hidden" name="uid" value="${user.uid}">

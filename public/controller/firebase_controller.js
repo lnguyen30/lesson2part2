@@ -84,3 +84,9 @@ export async function getUserList(){
     const result = await cf_getUserList();
     return result.data;
 }
+
+//calls updateUser to updateUser in index.js which updates firestore
+const cf_updateUser = firebase.functions().httpsCallable('cf_updateUser')
+export async function updateUser(uid, update){
+    await cf_updateUser({uid, update});
+}

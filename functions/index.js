@@ -20,10 +20,28 @@ exports.cf_getProductById = functions.https.onCall(getProductById);
 exports.cf_updateProduct = functions.https.onCall(updateProduct);
 exports.cf_deleteProduct = functions.https.onCall(deleteProduct);
 exports.cf_getUserList = functions.https.onCall(getUserList);
+exports.cf_updateUser = functions.https.onCall(updateUser);
 
 //returns true or false if the email passed in is an admin account
 function isAdmin(email){
     return Constant.adminEmails.includes(email);
+}
+
+async function updateUser(data, context){
+    // data has {uid, update object} -> update will pair values ={key: value} such as email, name of users...etc
+    if(!isAdmin(context.auth.token.email)){
+        if(Constant.DEV) console.log('not admin', context.auth.token.email);
+        throw new functions.https.HttpsError('unauthenticated', 'Only admins may invoke this function');
+     }
+
+     try{
+        const uid = data.uid;
+        const update = data.update;
+        await admin.auth().updateUser(uid, update)
+     }catch(e){
+        if(Constant.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', 'updateUser Failed');
+     }
 }
 
 //get's list of users in firebase store
