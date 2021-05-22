@@ -46,7 +46,7 @@ export async function users_page(){
     //renders user list
     Element.root.innerHTML = html;
 
-    // event lister when toggle button is pressed    
+    // event listener when toggle button is pressed    
     const toggleForms = document.getElementsByClassName('form-toggle-user');
     for(let i = 0; i < toggleForms.length; i++){
         toggleForms[i].addEventListener('submit', async e =>{
@@ -81,12 +81,36 @@ export async function users_page(){
             Util.enableButton(button, label);
         })
     }
+
+    //event listener for deleting users
+    const deleteForms = document.getElementsByClassName('form-delete-user');
+    for(let i = 0; i < deleteForms.length; i++){
+        deleteForms[i].addEventListener('submit', async e =>{
+            e.preventDefault();
+            if(!window.confirm('Are you sure you want to delete the user?')) return;
+
+            const button = e.target.getElementsByTagName('button')[0];
+            Util.disableButton(button)
+            //grabs the user's uid from form-delete-user
+            const uid = e.target.uid.value
+            //remove user by tag id
+            document.getElementById(`user-row-${uid}`).remove();
+            Util.info('Deleted', `User deleted: uid = ${uid}`)
+            try{
+                await FirebaseController.deleteUser(uid)
+            }catch(e){
+                if(Constant.DEV) console.log(e);
+                Util.info('Delete User in Error', JSON.stringify(e));
+            }
+        })
+    }
+
  }
 
 //renders each row of user, user-status-user.uid will id which user to toggle off/on
  function builderUserRow(user){
      return `
-        <tr>
+        <tr id="user-row-${user.uid}">
             <td>${user.email}</td>
             <td id="user-status-${user.uid}">${user.disabled ? 'Disabled' : 'Active'}</td>
             <td>
