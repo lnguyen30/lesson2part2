@@ -43,7 +43,24 @@ export async function users_page(){
         if(Constant.DEV) console.log(e);
         Util.info('Error getUserList', JSON.stringify(e));
     }
+    //renders user list
     Element.root.innerHTML = html;
+
+    // event lister when toggle button is pressed    
+    const toggleForms = document.getElementsByClassName('form-toggle-user');
+    for(let i = 0; i < toggleForms.length; i++){
+        toggleForms[i].addEventListener('submit', e =>{
+            e.preventDefault();
+            // assigns the toggle button to button variable
+            const button = e.target.getElementsByTagName('button')[0];
+            //disables button temporarily
+            const label = Util.disableButton(button);
+
+            //fetches the uid from forms-toggle-users
+            const uid = e.target.uid.value;
+            const disabled = e.target.disabled.value;
+        })
+    }
  }
 
 //renders each row of user
