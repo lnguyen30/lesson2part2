@@ -4,10 +4,13 @@ import * as Constant from '../model/constant.js'
 import * as Util from './util.js'
 import * as FirebaseController from '../controller/firebase_controller.js'
 
+// User page button clicked -> calls user page to render table and user page
 export function addEventListeners(){
-    Element.menuUsers.addEventListener('click', ()=>{
+    Element.menuUsers.addEventListener('click', async ()=>{
         history.pushState(null, null, Route.routePathname.USERS)
+        const label = Util.disableButton(Element.menuUsers);
         users_page();
+
     })
 }
 
