@@ -117,7 +117,7 @@ export async function users_page(){
                 <form class="form-toggle-user" method="post" style="display: inline-block;">
                    <input type="hidden" name="uid" value="${user.uid}">
                    <input type="hidden" name="disabled" value="${user.disabled}">
-                   <button type="submit" class="btn btn-outline-primary">Toggle Acitve</button>
+                   <button type="submit" class="btn btn-outline-primary">Toggle Active</button>
                 </form>
                 <form class="form-delete-user" method="post" style="display: inline-block;">
                     <input type="hidden" name="uid" value="${user.uid}">
