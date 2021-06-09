@@ -9,7 +9,8 @@ export function addEventListeners(){
     Element.menuUsers.addEventListener('click', async ()=>{
         history.pushState(null, null, Route.routePathname.USERS)
         const label = Util.disableButton(Element.menuUsers);
-        users_page();
+        await users_page();
+        Util.enableButton(Element.menuUsers, label);
 
     })
 }
@@ -103,6 +104,7 @@ export async function users_page(){
                 Util.info('Delete User in Error', JSON.stringify(e));
             }
         })
+        
     }
 
  }
