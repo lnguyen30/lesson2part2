@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "wsp-lesson2-part2-lvn",
     "public": "public",
     "ignore": [
       "firebase.json",
